@@ -4,7 +4,7 @@ from apache_beam.options.pipeline_options import SetupOptions
 from apache_beam.io.avroio import WriteToAvro
 import json
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 import fastavro
 import argparse
 import logging
@@ -23,7 +23,7 @@ class _OutputFn(beam.DoFn):
         try:
             # Convertir 'Timestamp' a datetime y luego a milisegundos
             dt = datetime.strptime(record["Timestamp"], "%Y-%m-%d %H:%M:%S")
-            record["Timestamp_unix"] = int(dt.timestamp() * 1000)
+            record["Timestamp_unix"] = dt.replace(tzinfo=timezone.utc)
 
             # Validar tipos
             record["FanID"] = str(record["FanID"])
@@ -39,7 +39,6 @@ class _OutputFn(beam.DoFn):
         except Exception as e:
             logging.getLogger().setLevel(e)
             pass  # Ignorar registros inválidos
-
 
 def main(argv=None, save_main_session=True):
     parser = argparse.ArgumentParser()
