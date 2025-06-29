@@ -15,3 +15,5 @@ pip install parquet-cli
 sudo apt install software-properties-common -y
 sudo apt install  -y graphviz
 pip install Graphviz
+
+pip install kafka-python
